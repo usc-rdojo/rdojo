@@ -1,5 +1,5 @@
 ---
 layout: post
-title: Creating an R Notebook
+title: Getting ready for RDojo
 author: joe_hoover
 ---
