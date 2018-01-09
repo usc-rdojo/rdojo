@@ -1,0 +1,13 @@
+---
+title: "Introduction to Github for RSudio"
+output: html_notebook
+---
+
+Github is an online framework for version-controlled file sharing that is mostly used for code-related projects. A major advantage of version-controlled file sharing is that multiple people can work on the same project without worrying about version conflicts. However, even for single-person projects, version-controlled file sharing can be very useful, because it enables easy code backups and promotes organization. 
+
+One of the many advantages of working with RStudio is that it has integrated support for Github. This means that with a few button clicks you can pull new changes to a repository, add new files or changes old ones, and push (i.e. upload) your changes. 
+
+As an introduction to working with Github via RStudio, this post will walk through the steps necessary for accessing the RDojo Github repository. 
+
+
+## 
