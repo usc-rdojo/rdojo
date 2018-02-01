@@ -323,5 +323,60 @@ sjp.lmer(m.lmer3)
 ```
 
 
-Now
+### Hierarchical models: Varying slopes
+
+So, we've fully expressed our knowledge about how the intercepts in our model might be dependent. But, what about the *effect* of essay? In our initial plots, we saw that the relationship between essay and recall varies as a function of our grouping variables. 
+
+Accordingly, we should encode this in our model. Let's write up a formula:
+
+$recall_{ijkl} = \alpha_{00} + \beta_{10}*essay_{j} + \tau_{1j} + \tau_{1k} + \tau_{1l} + \tau_{0j} + \tau_{0k} + \tau_{0l} + \epsilon_{ijkl}$
+
+The new $\tau$s are just group specific adjustemts for the slope. $\beta_{10}$ now functions kind of like an intercept or *average* for the slope. I.e., $\beta_{10}$ is the effect of essay averaged across all groups. The $\tau_{1.}$ terms are then adjustments from the average for each group. 
+
+To model this in R, we can do the following: 
+
+
+```{r}
+
+# In the last random effect term, we indicate that prompt is nested in cluster.
+m.lmer4 <- lmer(recall ~ 1 + essay + (1 + essay | userID) + (1 + essay | clusterID/promptID), data=dat)
+
+summary(m.lmer3)
+```
+
+Hmmm, there was a problem with this model. 
+
+```{r}
+dat <- dat %>%
+  group_by(userID) %>%
+  mutate(essay.userMean = mean(essay, na.rm=T),
+         essay.userC = essay - essay.userMean)
+
+summary(dat)
+```
+
+```{r}
+m.lmer4 <- lmer(recall ~ 1 + essay.userC + (1 + essay.userC | userID) + (1 + essay.userC | clusterID/promptID), data=dat)
+
+summary(m.lmer4)
+```
+
+```{r}
+dat <- dat %>%
+  group_by(userID) %>%
+  mutate(recallCapacityLevel = cut(recall, breaks = 4, 
+                                             labels=F))
+```
+
+
+
+```{r}
+
+ggplot(data=dat, aes(x = essay.userC, 
+                     y = recall, 
+                     color = clusterID)) + geom_point() + 
+  ggtitle('essay.userC x recall') + 
+  geom_smooth(method='lm', color='black') + 
+  facet_grid(promptID~recallCapacityLevel)
+```
 
